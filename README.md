@@ -38,7 +38,7 @@ returns a dictionary:
 
 Which can then be used to give code some path-independence:
 
-```python3
+```python
 # Before
 subdir = "dir/subdir/"
 subdir_2 = os.path.join(subdir, subdir_2)
@@ -71,7 +71,7 @@ Clone the repo:
 
 Resolve aliases directly from a YAML file:
 
-```python3
+```python
 import pathaliases
 
 aliases = pathaliases.resolve_yaml_to_path_strings("aliases.yml")
@@ -81,7 +81,7 @@ print(aliases["SUBDIR"])  # echoes: "dir/subdir/"
 
 Resolve aliases from a dict:
 
-```python3
+```python
 import pathaliases
 
 aliases_dict = {
