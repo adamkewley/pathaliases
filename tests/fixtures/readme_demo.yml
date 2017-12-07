@@ -1,0 +1,15 @@
+dir/:
+  subdir/:
+    alias: SUBDIR
+    some/other/dir/:
+      alias: SUBDIR_2
+
+file.txt: { alias: [FILE, ALTERNATE_ALIAS] }
+
+dir2/:
+  extra_keys: are ignored
+  alias: 2ndDir
+
+some/very/long/path/:
+  into/a/deep/file/hierarchy/:
+    can/be/addressed/with: { alias: A_PATH_INDEPENDANT_ALIAS }
