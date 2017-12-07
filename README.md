@@ -22,7 +22,7 @@ some/very/long/path/:
     can/be/addressed/with: { alias: A_PATH_INDEPENDANT_ALIAS }
 ```
 
-Resolving this with `pathaliases.load_yaml_as_path_strings("aliases.yml")`
+Resolving this with `pathaliases.resolve_yaml_to_path_strings("aliases.yml")`
 returns a dictionary:
 
 ```python
@@ -44,7 +44,7 @@ subdir = "dir/subdir/"
 subdir_2 = os.path.join(subdir, subdir_2)
 
 # After: *where* the dirs are is configurable
-aliases = pathaliases.load_yaml_as_path_strings("aliases.yml")
+aliases = pathaliases.resolve_yaml_to_path_strings("aliases.yml")
 subdir = aliases["SUBDIR"]
 subdir_2 = aliases["SUBDIR_2"]
 ```
@@ -74,7 +74,7 @@ Resolve aliases directly from a YAML file:
 ```python3
 import pathaliases
 
-aliases = pathaliases.load_yaml_as_path_strings("aliases.yml")
+aliases = pathaliases.resolve_yaml_to_path_strings("aliases.yml")
 
 print(aliases["SUBDIR"])  # echoes: "dir/subdir/"
 ```
