@@ -1,5 +1,7 @@
 # pathaliases
 
+[![Build Status](https://travis-ci.org/adamkewley/pathaliases.svg?branch=master)](https://travis-ci.org/adamkewley/pathaliases)
+
 A python package for handling path aliases.
 
 Path aliases can be loaded directly from YAML files:
