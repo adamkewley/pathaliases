@@ -25,7 +25,7 @@ class TestPathaliases(unittest.TestCase):
         trivial_input = {
             "k1": {
                 "k2": {
-                    "alias": "v1"
+                    "alias": "v1",
                 }
             }
         }
@@ -38,7 +38,7 @@ class TestPathaliases(unittest.TestCase):
         trivial_input = {
             "k1": {
                 "k2": {
-                    "alias": "v1"
+                    "alias": "v1",
                 }
             }
         }
@@ -52,7 +52,7 @@ class TestPathaliases(unittest.TestCase):
         trivial_input = {
             "k1": {
                 "k2": {
-                    alternate_key: "v1"
+                    alternate_key: "v1",
                 }
             }
         }
@@ -66,7 +66,7 @@ class TestPathaliases(unittest.TestCase):
         trivial_input = {
             "k1": {
                 "k2": {
-                    alternate_key: "v1"
+                    alternate_key: "v1",
                 }
             }
         }
@@ -81,7 +81,7 @@ class TestPathaliases(unittest.TestCase):
                 "k2": "v1",
                 "k3": "v2",
                 "k4": {
-                    "k5": "v3"
+                    "k5": "v3",
                 }
             }
         }
@@ -95,7 +95,7 @@ class TestPathaliases(unittest.TestCase):
                 "k2": "v1",
                 "k3": "v2",
                 "k4": {
-                    "k5": "v3"
+                    "k5": "v3",
                 }
             }
         }
@@ -110,7 +110,7 @@ class TestPathaliases(unittest.TestCase):
                 "k3": {
                     "k4": "v2",
                     "k5": {
-                        "alias": "v3"
+                        "alias": "v3",
                     }
                 }
             }
@@ -122,7 +122,7 @@ class TestPathaliases(unittest.TestCase):
 
     def test_resolve_path_strings_returns_aliases_on_the_root(self):
         input_root = {
-            "alias": "v1"
+            "alias": "v1",
         }
 
         output = pathaliases.resolve_path_strings(input_root)
@@ -131,7 +131,7 @@ class TestPathaliases(unittest.TestCase):
 
     def test_resolve_path_lists_returns_empty_array_for_root_alias(self):
         input_root = {
-            "alias": "v1"
+            "alias": "v1",
         }
 
         output = pathaliases.resolve_path_lists(input_root)
@@ -143,7 +143,7 @@ class TestPathaliases(unittest.TestCase):
             "k1": {
                 "alias": [
                     "v1",
-                    "v2"
+                    "v2",
                 ]
             }
         }
@@ -159,13 +159,13 @@ class TestPathaliases(unittest.TestCase):
                 "k3": [
                     {"k4": {"alias": "v2"}},
                     [
-                        {"k5": {"alias": "v3"}}
+                        {"k5": {"alias": "v3"}},
                     ],
                     "v4"
                 ],
                 "k6": {
                     "k7": [
-                        {"alias": "v5"}
+                        {"alias": "v5"},
                     ]
                 }
             }
@@ -192,7 +192,7 @@ class TestPathaliases(unittest.TestCase):
                 "k3": [
                     {"alias": "v4"},
                     "v5",
-                    {"k4": {"alias": "v6"}}
+                    {"k4": {"alias": "v6"}},
                 ]
             }}
         ]
@@ -223,7 +223,7 @@ class TestPathaliases(unittest.TestCase):
             "k2": {
                 "k3": {
                     "k4": [
-                        {"alias": "v1"}
+                        {"alias": "v1"},
                     ]
                 }
             }
@@ -231,3 +231,150 @@ class TestPathaliases(unittest.TestCase):
 
         with self.assertRaises(RuntimeError):
             pathaliases.resolve_path_strings(input_with_duplicate_aliases)
+
+    def test_resolve_path_strings_resolves_variables_in_root_keys_if_provided_an_environment(self):
+        input_containing_unresolved_variables = {
+            "${var1}": {
+                "alias": "v1",
+            }
+        }
+
+        env = {
+            "var1": "k1",
+        }
+
+        result = pathaliases.resolve_path_strings(input_containing_unresolved_variables, env=env)
+
+        expected_result = {
+            "v1": "k1",
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_lists_resolves_variables_in_root_keys_if_provided_environment(self):
+        input_containing_unresolved_variables = {
+            "${var1}": {
+                "alias": "v1",
+            }
+        }
+
+        env = {
+            "var1": "k1",
+        }
+
+        result = pathaliases.resolve_path_lists(input_containing_unresolved_variables, env=env)
+
+        expected_result = {
+            "v1": ["k1"],
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_strings_resolves_varibles_in_root_values_if_provided_an_environment(self):
+        input_containing_unresolved_variables = {
+            "k1": {
+                "alias": "${var1}",
+            }
+        }
+
+        env = {
+            "var1": "v1",
+        }
+
+        result = pathaliases.resolve_path_strings(input_containing_unresolved_variables, env=env)
+
+        expected_result = {
+            "v1": "k1",
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_lists_resolves_variables_in_root_values_if_provided_an_environment(self):
+        input_containing_unresolved_variables = {
+            "k1": {
+                "alias": "${var1}",
+            }
+        }
+
+        env = {
+            "var1": "v1",
+        }
+
+        result = pathaliases.resolve_path_lists(input_containing_unresolved_variables, env=env)
+
+        expected_result = {
+            "v1": ["k1"],
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_stings_resolves_nested_dictionary_variables(self):
+        input_containing_nested_variables = {
+            "k1": {
+                "k2": {
+                    "${var1}": {
+                        "alias": "${var2}",
+                    }
+                }
+            }
+        }
+
+        env = {
+            "var1": "k3",
+            "var2": "v1",
+        }
+
+        result = pathaliases.resolve_path_strings(input_containing_nested_variables, env=env)
+
+        expected_result = {
+            "v1": "k1k2k3",
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_lists_resolves_nested_dictionary_variables(self):
+        input_containing_nested_variables = {
+            "k1": {
+                "k2": {
+                    "${var1}": {
+                        "alias": "${var2}",
+                    }
+                }
+            }
+        }
+
+        env = {
+            "var1": "k3",
+            "var2": "v1",
+        }
+
+        result = pathaliases.resolve_path_lists(input_containing_nested_variables, env=env)
+
+        expected_result = {
+            "v1": ["k1", "k2", "k3"],
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_resolve_path_lists_resolves_nested_array_variables(self):
+        input_containing_nested_variables_in_array = {
+            "k1": {
+                "k2": {
+                    "alias": [
+                        "${var1}"
+                    ]
+                }
+            }
+        }
+
+        env = {
+            "var1": "v1",
+        }
+
+        result = pathaliases.resolve_path_lists(input_containing_nested_variables_in_array, env=env)
+
+        expected_result = {
+            "v1": ["k1", "k2"],
+        }
+
+        self.assertEqual(result, expected_result)
