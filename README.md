@@ -38,7 +38,7 @@ returns a dictionary:
 }
 ```
 
-Which can then be used to give code some path-independence:
+Which can be used to make codebases independent from paths:
 
 ```python
 # Before
@@ -56,10 +56,9 @@ This approach is designed to be:
 - **Extremely simple** - `pathaliases` is just concatenating all the keys
   that lead up to an alias.
 - **Readable** - A developer/sysadmin should be able to read, understand,
-  and edit pathaliases without much effort.
+  and edit pathaliases.
 - **Easy to port** - The implementation uses standard file formats and
-  conventions, making it easy to reimplement in other languages
-
+  conventions.
 
 # Installation
 
@@ -94,4 +93,30 @@ aliases_dict = {
 
 aliases = pathaliases.resolve_path_strings(aliases_dict)
 print(aliases["SUBDIR"])  # echoes: "dir/subdir/"
+```
+
+
+# Substituting Variables
+
+Alias files can also contain variables, templated with `${VARNAME}`:
+
+```yaml
+foo/:
+  ${var}/:
+    alias: ${key}
+```
+
+`pathaliases` allows you to pass in an environment when evaluating paths:
+
+```python
+env = {
+  "var": "bar",
+  "key": "some_alias"
+}
+
+aliases =  pathaliases.resolve_yaml_to_path_strings("aliases.yml", env=env)
+
+aliases == {
+  "some_alias": "foo/bar/",
+}
 ```
