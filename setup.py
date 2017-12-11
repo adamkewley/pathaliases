@@ -21,7 +21,7 @@ __version__ = '0.0.1'
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 # get the dependencies and installs
@@ -38,17 +38,19 @@ setup(
     long_description=long_description,
     url='https://github.com/adamkewley/pathaliases',
     download_url='https://github.com/adamkewley/pathaliases/tarball/' + __version__,
-    license='BSD',
+    license='Apache 2.0',
     classifiers=[
-      'Development Status :: 3 - Alpha',
+      'Development Status :: 4 - Beta',
       'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.4',
+      'License :: OSI Approved :: Apache Software License',
     ],
-    keywords='',
-    packages=find_packages(exclude=['docs', 'tests*']),
+    keywords='path aliasing',
+    py_modules=['pathaliases'],
     include_package_data=True,
     author='Adam Kewley',
+    author_email='contact@adamkewley.com',
     install_requires=install_requires,
     dependency_links=dependency_links,
-    author_email=''
+    python_requires='>=3',
 )

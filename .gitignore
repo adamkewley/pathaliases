@@ -38,3 +38,9 @@ docs/_build
 
 # Cookiecutter
 output/
+
+# Emacs
+*~
+
+# Build
+dist/
