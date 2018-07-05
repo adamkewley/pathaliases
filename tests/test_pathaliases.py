@@ -378,3 +378,22 @@ class TestPathaliases(unittest.TestCase):
         }
 
         self.assertEqual(result, expected_result)
+
+    def test_resolve_works_with_numeric_values_in_env(self):
+        input_containing_unresolved_variables = {
+            "k1": {
+                "alias": "${var1}",
+            }
+        }
+
+        env = {
+            "var1": 1,
+        }
+
+        result = pathaliases.resolve_path_lists(input_containing_unresolved_variables, env=env)
+
+        expected_result = {
+            "1": ["k1"],
+        }
+
+        self.assertEqual(result, expected_result)

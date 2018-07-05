@@ -54,7 +54,7 @@ def _substitute_variables_in(s, env):
     ret = s
     for var_name, var_val in env.items():
         var_regex = re.compile("\${\s*%s\s*}" % var_name)
-        ret = var_regex.sub(var_val, ret)
+        ret = var_regex.sub(str(var_val), ret)
     return ret
 
 
